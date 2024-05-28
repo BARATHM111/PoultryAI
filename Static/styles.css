@@ -1,0 +1,64 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #c26e82;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+#uploadInput {
+    margin-bottom: 20px;
+}
+
+#uploadButton {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#uploadButton:hover {
+    background-color: #45a049;
+}
+
+#predictionResult {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+/* Added styles for uploaded image container */
+#uploadedImageContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+}
+
+/* Added styles for disease information container */
+#diseaseInfo {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#diseaseInfo h2 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+#diseaseInfo div {
+    margin-bottom: 10px;
+}
+

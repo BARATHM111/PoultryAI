@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Classifier</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div id="headerContainer" class="header-container">
+        <h1>BerryWatch AI</h1>
+    </div>
+    
+    <div id="mainContainer" style="display: flex;">
+        <div id="inputContainer" style="flex-grow: 1;">
+            <input type="file" id="uploadInput">
+            <button id="uploadButton">Upload</button>
+            <div id="predictionResult"></div>
+            <div id="diseaseInfo" style="display: none;">
+                <h2>General Precaution</h2>
+                <div id="diseaseDescription"></div>
+                <div id="prevention"></div>
+                <div id="suggestions"></div>
+            </div>
+        </div>
+        <div id="uploadedImageContainer" style="flex-grow: 1; margin-left: 20px;">
+            <img id="uploadedImage" src="#" alt="Uploaded Image" style="max-width: 100%; max-height: 300px; display: none;">
+        </div>
+    </div>
+    <script>
+        document.getElementById('uploadInput').addEventListener('change', function() {
+            const fileInput = document.getElementById('uploadInput');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Please select a file.');
+                return;
+            }
+
+            // Display uploaded image
+            const uploadedImage = document.getElementById('uploadedImage');
+            uploadedImage.src = URL.createObjectURL(file);
+            uploadedImage.style.display = 'block';
+        });
+
+        document.getElementById('uploadButton').addEventListener('click', async function() {
+            const fileInput = document.getElementById('uploadInput');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Please select a file.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                document.getElementById('predictionResult').innerText = data.prediction;
+
+                // Display additional information based on prediction
+                const diseaseInfo = document.getElementById('diseaseInfo');
+                const diseaseDescription = document.getElementById('diseaseDescription');
+                const prevention = document.getElementById('prevention');
+                const suggestions = document.getElementById('suggestions');
+
+                // Reset previous content
+                diseaseDescription.innerHTML = '';
+                prevention.innerHTML = '';
+                suggestions.innerHTML = '';
+
+                switch (data.prediction.toLowerCase()) {
+                    case 'ecoli':
+                        diseaseDescription.innerHTML = 'Disease caused by E. coli.';
+                        prevention.innerHTML = 'Prevent contamination of food and water sources.';
+                        suggestions.innerHTML = 'Use organic fertilizers such as compost.';
+                        diseaseInfo.style.display = 'block';
+                        break;
+                    case 'streptococcus':
+                        diseaseDescription.innerHTML = 'Disease caused by Streptococcus bacteria.';
+                        prevention.innerHTML = 'Maintain good hygiene and cleanliness.';
+                        suggestions.innerHTML = 'Regularly sanitize surfaces and avoid close contact with infected individuals.';
+                        diseaseInfo.style.display = 'block';
+                        break;
+                    case 'staphylococcus':
+                        diseaseDescription.innerHTML = 'Disease caused by Staphylococcus bacteria.';
+                        prevention.innerHTML = 'Practice good personal hygiene and wound care.';
+                        suggestions.innerHTML = 'Use antibiotics as prescribed by a healthcare professional.';
+                        diseaseInfo.style.display = 'block';
+                        break;
+                    case 'klebsiella':
+                        diseaseDescription.innerHTML = 'Disease caused by Klebsiella bacteria.';
+                        prevention.innerHTML = 'Prevent transmission through proper sanitation measures.';
+                        suggestions.innerHTML = 'Avoid overuse of antibiotics.';
+                        diseaseInfo.style.display = 'block';
+                        break;
+                    case 'pseudomonas':
+                        diseaseDescription.innerHTML = 'Disease caused by Pseudomonas bacteria.';
+                        prevention.innerHTML = 'Maintain proper hygiene and cleanliness in healthcare settings.';
+                        suggestions.innerHTML = 'Use appropriate disinfectants and antibiotics.';
+                        diseaseInfo.style.display = 'block';
+                        break;
+                    default:
+                        // If prediction does not match any specific case, hide the additional info
+                        diseaseInfo.style.display = 'none';
+                        break;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    </script>
+</body>
+</html>
